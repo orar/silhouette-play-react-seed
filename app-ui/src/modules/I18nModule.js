@@ -2,8 +2,7 @@
 import { createAction, handleActions } from 'redux-actions';
 
 export const initialState = {
-  language: 'en',
-  initialized: false,
+  language: 'de',
   isPending: false,
   catalog: {},
 };
@@ -18,11 +17,6 @@ export const fetchCatalogRejected = createAction('I18N_FETCH_CATALOG_REJECTED');
 export default handleActions({
   [setLanguage]: (state, action) => ({ ...state, language: action.payload }),
   [fetchCatalogPending]: state => ({ ...state, isPending: true }),
-  [fetchCatalogFulfilled]: (state, action) => ({
-    ...state,
-    initialized: true,
-    isPending: false,
-    catalog: action.payload,
-  }),
+  [fetchCatalogFulfilled]: (state, action) => ({ ...state, isPending: false, catalog: action.payload }),
   [fetchCatalogRejected]: state => ({ ...state, isPending: false }),
 }, initialState);

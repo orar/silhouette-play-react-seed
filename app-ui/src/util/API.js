@@ -10,8 +10,11 @@ import config from 'config/index';
  */
 export class APIResponse {
   code: string;
+
   description: string;
+
   details: any;
+
   constructor(code: string, description: string, details: any = []) {
     this.code = code;
     this.description = description;
@@ -21,14 +24,28 @@ export class APIResponse {
 
 /**
  * An API error that can transport an `APIResponse`.
+ *
+ * Works with Babel6 and instanceof.
+ * @see https://stackoverflow.com/a/46971044/2153190
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
  */
-export class APIError extends Error {
+export class APIError {
+  name: string;
+
+  message: string;
+
+  stack: string;
+
   response: APIResponse;
+
   constructor(response: APIResponse) {
-    super(response.description);
     this.response = response;
+    this.name = this.constructor.name;
+    this.message = response.description;
+    this.stack = (new Error(response.description)).stack;
   }
 }
+Object.setPrototypeOf(APIError, Error);
 
 /**
  * Provides helpers for the API implementations.
@@ -44,10 +61,10 @@ export default class API {
    *
    * @param route  The API route.
    * @param method The request method.
-   * @return A resolved or rejected promise containing an API result.
+   * @return A resolved or rejected promise.
    * @see http://www.redotheweb.com/2015/11/09/api-security.html
    */
-  request(route: string, method: string = 'GET'): Promise<APIResponse> {
+  request(route: string, method: string = 'GET'): Promise<Response> {
     return this.statusHandler(fetch(`${config.apiBaseUrl}/${route}`, {
       method,
       credentials: 'include', // Needed to allow cookies with CORS, see above link
@@ -60,10 +77,10 @@ export default class API {
    * @param route The API route.
    * @param json  The JSON data to post.
    * @param method The request method.
-   * @return A resolved or rejected promise containing an API result.
+   * @return A resolved or rejected promise.
    * @see http://www.redotheweb.com/2015/11/09/api-security.html
    */
-  jsonRequest(route: string, json: *, method: string = 'POST'): Promise<APIResponse> {
+  jsonRequest(route: string, json: *, method: string = 'POST'): Promise<Response> {
     return this.statusHandler(fetch(`${config.apiBaseUrl}/${route}`, {
       method,
       headers: {
@@ -79,13 +96,17 @@ export default class API {
   /**
    * Executes a request with a application/x-www-form-urlencoded or multipart/form-data body.
    *
+   * The `Content-Type` headers will automatically be added based on the passed content:
+   * - URLSearchParams -> application/x-www-form-urlencoded
+   * - FormData -> multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+   *
    * @param route  The API route.
    * @param body   The body to post.
    * @param method The request method.
-   * @return A resolved or rejected promise containing an API result.
+   * @return A resolved or rejected promise.
    * @see http://www.redotheweb.com/2015/11/09/api-security.html
    */
-  formRequest(route: string, body: *, method: string = 'POST'): Promise<APIResponse> {
+  formRequest(route: string, body: URLSearchParams | FormData, method: string = 'POST'): Promise<Response> {
     return this.statusHandler(fetch(`${config.apiBaseUrl}/${route}`, {
       method,
       headers: {
@@ -99,15 +120,18 @@ export default class API {
   /**
    * Handles the status of a response in a unified manner.
    *
+   * All 2xx responses wil be returned directly, so that the caller can extract the body as required. All other
+   * responses will be rejected with an APIError.
+   *
    * @param promise The result from a fetch call.
-   * @return A resolved or rejected promise containing an API result.
+   * @return A resolved or rejected promise.
    */
-  statusHandler(promise: Promise<*>): Promise<APIResponse> {
+  statusHandler(promise: Promise<*>): Promise<Response> {
     const self = this;
     return promise.then((response) => {
       // We return a resolved promise with the APIResponse for all 2xx status codes
       if (response.status >= 200 && response.status <= 299) {
-        return response.json();
+        return response;
       }
 
       // We return a rejected promise for all 4xx errors

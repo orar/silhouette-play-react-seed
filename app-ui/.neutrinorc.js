@@ -2,18 +2,20 @@ const path = require('path');
 
 module.exports = {
   use: [
-    ['neutrino-preset-react', {
+    ['@neutrinojs/react', {
       // http://discourse.silhouette.rocks/t/hot-module-replacement-for-silhouette-play-react-seed-template-doesnt-work/193/4
       devServer: {
         headers: {
           "Access-Control-Allow-Origin": "*",
         }
       },
+      babel: {
+        presets: [
+          '@lingui/babel-preset-react',
+        ],
+      },
     }],
-    'neutrino-webpack.js',
-    'neutrino-sass.js',
-    'neutrino-karma.js',
-    ['neutrino-middleware-html-template', {
+    ['@neutrinojs/html-template', {
       title: 'Silhouette Play React Seed Template',
       mobile: true,
       links: [
@@ -22,32 +24,13 @@ module.exports = {
           href: '/static/favicon.ico',
           rel: 'shortcut icon',
           type: 'image/x-icon'
-        }
+        },
       ],
     }],
+    '@neutrinojs/karma',
+    'neutrino-webpack.js',
+    'neutrino-sass.js',
     (neutrino) => neutrino.config.node.set('Buffer', true),
-    (neutrino) => neutrino.config
-      .entry('vendor')
-        .add('flux-standard-action')
-        .add('js-cookie')
-        .add('lingui-i18n')
-        .add('lingui-react')
-        .add('lodash')
-        .add('prop-types')
-        .add('react')
-        .add('react-bootstrap')
-        .add('react-dom')
-        .add('react-redux')
-        .add('react-redux-form')
-        .add('react-router')
-        .add('react-s-alert')
-        .add('redux')
-        .add('redux-actions')
-        .add('redux-auth-wrapper')
-        .add('redux-saga')
-        .add('redux-thunk')
-        .add('validator')
-        .add('whatwg-fetch')
   ],
   options: {
     output: path.resolve(__dirname, '../target/npm/dist/ui')
