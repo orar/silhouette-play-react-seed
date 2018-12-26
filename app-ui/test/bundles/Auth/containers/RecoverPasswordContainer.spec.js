@@ -1,35 +1,8 @@
 import { actions as formActions } from 'react-redux-form';
-import config from 'config/index';
-import { history } from 'modules/LocationModule';
-import { onRecover, mapDispatchToProps } from 'bundles/Auth/containers/RecoverPasswordContainer';
-import { recoverPasswordRequest, recoverPassword, modelPath } from 'bundles/Auth/modules/RecoverPasswordModule';
+import { mapDispatchToProps } from 'bundles/Auth/containers/RecoverPasswordContainer';
+import { recoverPassword, modelPath } from 'bundles/Auth/modules/RecoverPasswordModule';
 
 describe('(Container) RecoverPasswordContainer', () => {
-  describe('onRecover', () => {
-    let actions;
-
-    beforeEach(() => {
-      actions = {
-        remove: sinon.spy(),
-      };
-    });
-
-    it('Should be a function', () => {
-      expect(onRecover).to.be.a('function');
-    });
-
-    it('Should move user to SignIn page', () => {
-      const push = sinon.spy(history, 'push');
-      const state = { data: { id: recoverPasswordRequest.id }, actions };
-      const event = {};
-      onRecover(event, state);
-
-      expect(actions.remove).to.have.been.calledBefore(push);
-      expect(push).to.have.been.calledOnceWithExactly(config.route.auth.signIn);
-      push.restore();
-    });
-  });
-
   describe('mapDispatchToProps', () => {
     let dispatch;
 
@@ -40,7 +13,7 @@ describe('(Container) RecoverPasswordContainer', () => {
     it('Should map function to ActivateAccount component props', () => {
       const props = mapDispatchToProps(dispatch);
 
-      expect(props).to.have.all.keys(['onRecover', 'componentWillUnmount', 'onSend']);
+      expect(props).to.have.all.keys(['componentWillUnmount', 'onSend']);
     });
 
     it('Should dispatch `recoverPassword` when `onSend` is called', () => {

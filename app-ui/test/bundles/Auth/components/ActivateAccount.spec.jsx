@@ -137,14 +137,6 @@ describe('(Component) Auth/ActivateAccount', () => {
           expect(wrapper.props().loading).to.be.true();
         });
 
-        it('Should have `onSuccess` prop set', () => {
-          expect(node.props().onSuccess).to.be.a('function');
-        });
-
-        it('Should have `onFailure` prop set', () => {
-          expect(node.props().onFailure).to.be.a('function');
-        });
-
         it('Should have `inject` prop set to a function', () => {
           expect(node.props().inject).to.be.a('function');
         });

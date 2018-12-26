@@ -8,7 +8,6 @@ import { isRequired } from 'util/Validator';
 import { modelPath, resetPasswordRequest } from 'bundles/Auth/modules/ResetPasswordModule';
 import FormControl from 'components/FormControl';
 import type { FormProps } from 'util/Form';
-import { popoverOnFailure, popoverOnSuccess } from 'util/Form';
 import { Request } from 'questrar';
 import { requestButtonProps } from 'bundles/Auth/selectors/AuthSelectors';
 
@@ -23,7 +22,7 @@ type Props = {
 }
 
 export const ResetPasswordComponent = ({
-  token, form, i18n, onReset, onResetSuccess, onResetFailure,
+  token, form, i18n, onReset,
 }: Props) => (
   <Panel className="reset-password">
     <Panel.Heading>
@@ -53,14 +52,6 @@ export const ResetPasswordComponent = ({
         <Request
           id={resetPasswordRequest.id}
           inject={requestButtonProps(form.$form.valid)}
-          onFailure={popoverOnFailure({
-            title: (
-              <Trans>
-                Sign-In Failure
-              </Trans>
-            ),
-            onClick: onResetFailure,
-          })}
         >
           <Button bsStyle="primary" type="submit" block>
             <Trans>

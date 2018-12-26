@@ -1,5 +1,6 @@
 // @flow
 import { actions } from 'react-redux-form';
+import Alert from 'react-s-alert';
 import { call, put, take } from 'redux-saga/effects';
 import { handleError, formErrorHandler } from 'util/Saga';
 import { history } from 'modules/LocationModule';
@@ -29,7 +30,7 @@ export function* signInSaga(api: AuthAPI): Generator<*, *, *> {
       yield call(handleError, e, {
         'auth.signIn.form.invalid': formErrorHandler(modelPath),
         'auth.signIn.credentials': (error: APIError) => ([
-          put(signInRequest.failed(error.response.description)),
+          call(Alert.error, error.response.description),
         ]),
         'auth.signIn.account.inactive': (error: APIError) => ([
           put(saveActivationEmail(error.response.details.email)),

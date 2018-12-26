@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Panel, Checkbox } from 'react-bootstrap';
-import { Button, RequestPopover } from 'components/Elements';
+import { Button } from 'components/Elements';
 import { Form, Control } from 'react-redux-form';
 import { withI18n, Trans } from '@lingui/react';
 import { isRequired } from 'util/Validator';
@@ -10,7 +10,6 @@ import { modelPath, signInRequest } from 'bundles/Auth/modules/SignInModule';
 import FormControl from 'components/FormControl';
 import isEmail from 'validator/lib/isEmail';
 import config from 'config/index';
-import { popoverOnFailure } from 'util/Form';
 import type { FormProps } from 'util/Form';
 import { Request } from 'questrar';
 import { requestButtonProps } from 'bundles/Auth/selectors/AuthSelectors';
@@ -68,13 +67,6 @@ export const SignInComponent = ({
         <Request
           id={signInRequest.id}
           inject={requestButtonProps(form.$form.valid)}
-          onFailure={popoverOnFailure({
-            title: (
-              <Trans>
-                Sign-In Failure
-              </Trans>
-            ),
-          })}
         >
           <Button bsStyle="primary" type="submit" block>
             <Trans>

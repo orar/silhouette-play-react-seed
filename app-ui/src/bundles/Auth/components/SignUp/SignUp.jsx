@@ -11,7 +11,6 @@ import FormControl from 'components/FormControl';
 import isEmail from 'validator/lib/isEmail';
 import config from 'config/index';
 import type { FormProps } from 'util/Form';
-import { popoverOnSuccess } from 'util/Form';
 import { Request } from 'questrar';
 import { requestButtonProps } from 'bundles/Auth/selectors/AuthSelectors';
 import './SignUp.scss';
@@ -75,13 +74,6 @@ export const SignUpComponent = ({
         <Request
           id={signUpRequest.id}
           inject={requestButtonProps(form.$form.valid)}
-          onSuccess={popoverOnSuccess({
-            title: (
-              <Trans>
-                Signed Up
-              </Trans>
-            ),
-          })}
         >
           <Button bsStyle="primary" type="submit" block>
             <Trans>

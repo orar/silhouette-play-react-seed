@@ -43,7 +43,7 @@ describe('(Saga) Auth/RecoverPasswordSaga', () => {
     it('Should set the state to fulfilled if the call to the API was successful', () => {
       const api = { recoverPassword: () => successResponse };
       return expectSaga(recoverPasswordSaga, api)
-        .put(recoverPasswordRequest.success(successResponse.description))
+        .put(recoverPasswordRequest.success())
         .dispatch(recoverPassword(payload))
         .silentRun();
     });
@@ -88,16 +88,16 @@ describe('(Saga) Auth/RecoverPasswordSaga', () => {
         .silentRun();
     });
 
-    xit('Should display the success alert box on success', () => {
+    it('Should display the success alert box on success', () => {
       const api = { recoverPassword: () => successResponse };
       return expectSaga(recoverPasswordSaga, api)
-        .call(Alert.success, successResponse.description, { timeout: 30000 })
+        .call(Alert.success, successResponse.description)
         .dispatch(recoverPassword(payload))
         .silentRun();
     });
 
 
-    xit('Should route to the sign-in page on success', () => {
+    it('Should route to the sign-in page on success', () => {
       const api = { recoverPassword: () => successResponse };
       return expectSaga(recoverPasswordSaga, api)
         .call(history.push, config.route.auth.signIn)

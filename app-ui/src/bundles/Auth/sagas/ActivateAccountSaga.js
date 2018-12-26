@@ -34,7 +34,9 @@ export function* sendActivationEmailWorker(api: AuthAPI): Generator<*, *, *> {
     try {
       yield put(emailActivationRequest.pending());
       const response = yield call([api, api.sendActivationMail], payload);
-      yield put(emailActivationRequest.success(response.description));
+      yield put(emailActivationRequest.success());
+      yield call(Alert.success, response.description);
+      yield call(history.push, config.route.auth.signIn);
       yield put(resetActivationEmail());
     } catch (e) {
       yield put(emailActivationRequest.failed());

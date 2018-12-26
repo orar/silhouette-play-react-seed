@@ -41,7 +41,15 @@ describe('(Saga) Auth/SignUpSaga', () => {
     it('Should set the state to fulfilled if the call to the API was successful', () => {
       const api = { signUp: () => successResponse };
       return expectSaga(signUpSaga, api)
-        .put(signUpRequest.success(successResponse.description))
+        .put(signUpRequest.success())
+        .dispatch(signUp(payload))
+        .silentRun();
+    });
+
+    it('Should set the state to fulfilled if the call to the API was successful', () => {
+      const api = { signUp: () => successResponse };
+      return expectSaga(signUpSaga, api)
+        .call(Alert.success, successResponse.description)
         .dispatch(signUp(payload))
         .silentRun();
     });

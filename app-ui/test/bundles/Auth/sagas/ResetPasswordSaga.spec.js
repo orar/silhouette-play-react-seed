@@ -96,15 +96,6 @@ describe('(Saga) Auth/ResetPasswordSaga', () => {
         .silentRun();
     });
 
-    it('Should set the state to rejected with message '
-      + 'if the call to the API failed due to invalid token', () => {
-      const api = { resetPassword: () => { throw invalidTokenError; } };
-      return expectSaga(resetPasswordWorker, api)
-        .put(resetPasswordRequest.failed(invalidTokenError.response.description))
-        .dispatch(resetPassword(resetPayload))
-        .silentRun();
-    });
-
     it('Should set the state to rejected if the call to the API failed', () => {
       const api = { resetPassword: () => { throw fatalError; } };
       return expectSaga(resetPasswordWorker, api)
@@ -153,6 +144,22 @@ describe('(Saga) Auth/ResetPasswordSaga', () => {
         .silentRun();
     });
 
+    it('Should display the error alert box on failure', () => {
+      const api = { resetPassword: () => successResponse };
+      return expectSaga(resetPasswordWorker, api)
+        .call(Alert.success, successResponse.description)
+        .dispatch(resetPassword(resetPayload))
+        .silentRun();
+    });
+
+    it('Should route to the sign-in page page on failure', () => {
+      const api = { resetPassword: () => successResponse };
+      return expectSaga(resetPasswordWorker, api)
+        .call(history.push, config.route.auth.signIn)
+        .dispatch(resetPassword(resetPayload))
+        .silentRun();
+    });
+
     it('Should handle an invalid form', () => {
       const api = { resetPassword: () => { throw invalidFormError; } };
       return expectSaga(resetPasswordWorker, api)
@@ -164,7 +171,9 @@ describe('(Saga) Auth/ResetPasswordSaga', () => {
     it('Should handle an invalid token', () => {
       const api = { resetPassword: () => { throw invalidTokenError; } };
       return expectSaga(resetPasswordWorker, api)
-        .put(resetPasswordRequest.failed(invalidTokenError.response.description))
+        .put(resetPasswordRequest.failed())
+        .call(Alert.error, invalidTokenError.response.description)
+        .call(history.push, config.route.auth.passwordRecovery)
         .dispatch(resetPassword(resetPayload))
         .silentRun();
     });

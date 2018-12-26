@@ -148,10 +148,6 @@ describe('(Component) Auth/ResetPassword', () => {
           expect(wrapper.props().loading).to.be.true();
         });
 
-        it('Should have `popoverOnFail` prop set to true', () => {
-          expect(node.props().onFailure).to.be.a('function');
-        });
-
         it('Should have `inject` prop set as a function', () => {
           expect(node.props().inject).to.be.a('function');
         });

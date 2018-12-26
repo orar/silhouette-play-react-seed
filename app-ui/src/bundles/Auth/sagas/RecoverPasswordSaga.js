@@ -1,6 +1,7 @@
 // @flow
 import { actions } from 'react-redux-form';
 import { call, put, take } from 'redux-saga/effects';
+import Alert from 'react-s-alert';
 import { handleError, formErrorHandler } from 'util/Saga';
 import {
   modelPath,
@@ -8,6 +9,9 @@ import {
   recoverPasswordRequest,
 } from 'bundles/Auth/modules/RecoverPasswordModule';
 import AuthAPI from 'bundles/Auth/apis/AuthAPI';
+import config from 'config/index';
+import { history } from 'modules/LocationModule';
+
 
 export function* recoverPasswordSaga(api: AuthAPI): Generator<*, *, *> {
   while (true) {
@@ -15,7 +19,9 @@ export function* recoverPasswordSaga(api: AuthAPI): Generator<*, *, *> {
     try {
       yield put(recoverPasswordRequest.pending());
       const response = yield call([api, api.recoverPassword], payload);
-      yield put(recoverPasswordRequest.success(response.description));
+      yield put(recoverPasswordRequest.success());
+      yield call(Alert.success, response.description);
+      yield call(history.push, config.route.auth.signIn);
       yield put(actions.reset(modelPath));
     } catch (e) {
       yield put(recoverPasswordRequest.failed());

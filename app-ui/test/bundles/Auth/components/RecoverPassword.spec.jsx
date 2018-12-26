@@ -163,10 +163,6 @@ describe('(Component) Auth/RecoverPassword', () => {
           expect(wrapper.props().loading).to.be.true();
         });
 
-        it('Should have `onSuccess` prop set', () => {
-          expect(node.props().onSuccess).to.be.a('function');
-        });
-
         it('Should have `inject` prop set as a function', () => {
           expect(node.props().inject).to.be.a('function');
         });

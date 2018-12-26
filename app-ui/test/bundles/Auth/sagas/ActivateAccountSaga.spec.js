@@ -90,7 +90,7 @@ describe('(Saga) Auth/ActivateAccountSaga', () => {
     it('Should set the request state to fulfilled if the call to the API was successful', () => {
       const api = { sendActivationMail: () => successResponse };
       return expectSaga(sendActivationEmailWorker, api)
-        .put(emailActivationRequest.success(successResponse.description))
+        .put(emailActivationRequest.success())
         .dispatch(sendActivationEmail(emailPayload))
         .silentRun();
     });
@@ -120,7 +120,7 @@ describe('(Saga) Auth/ActivateAccountSaga', () => {
         .silentRun();
     });
 
-    xit('Should route to the sign-in page on success', () => {
+    it('Should route to the sign-in page on success', () => {
       const api = { sendActivationMail: () => successResponse };
       return expectSaga(sendActivationEmailWorker, api)
         .call(history.push, config.route.auth.signIn)
@@ -128,10 +128,10 @@ describe('(Saga) Auth/ActivateAccountSaga', () => {
         .silentRun();
     });
 
-    xit('Should display the success alert box on success', () => {
+    it('Should display the success alert box on success', () => {
       const api = { sendActivationMail: () => successResponse };
       return expectSaga(sendActivationEmailWorker, api)
-        .call(Alert.success, successResponse.description, { timeout: 30000 })
+        .call(Alert.success, successResponse.description)
         .dispatch(sendActivationEmail(emailPayload))
         .silentRun();
     });

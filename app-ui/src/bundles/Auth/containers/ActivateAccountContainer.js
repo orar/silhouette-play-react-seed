@@ -15,23 +15,12 @@ import { getActivateAccountEmail } from 'bundles/Auth/selectors/AuthSelectors';
 const mapStateToProps = state => getActivateAccountEmail(state);
 
 /**
- * Account activation request on success callback
- * @param event MouseEvent
- * @param request Request state
- */
-export const onActivationSent = (event, request) => {
-  request.actions.remove(request.data.id);
-  history.push(config.route.auth.signIn);
-};
-
-/**
  * Maps the store `dispatch` function to the React component `props`.
  *
  * @param {Function} dispatch The Redux store dispatch function.
  * @returns {Object} The props passed to the react component.
  */
 export const mapDispatchToProps = dispatch => ({
-  onActivationSent,
   onSend: email => dispatch(sendActivationEmail(email)),
   componentWillMount: (email) => {
     if (!email) {

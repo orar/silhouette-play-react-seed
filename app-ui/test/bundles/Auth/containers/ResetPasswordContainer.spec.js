@@ -1,5 +1,4 @@
 import { actions } from 'react-redux-form';
-import config from 'config/index';
 import { history } from 'modules/LocationModule';
 import { mapDispatchToProps } from 'bundles/Auth/containers/ResetPasswordContainer';
 import { resetPassword, validatePasswordToken, modelPath } from 'bundles/Auth/modules/ResetPasswordModule';
@@ -28,7 +27,6 @@ describe('(Container) ResetPasswordContainer', () => {
 
     it('Should have all required props', () => {
       expect(props).to.have.all.keys([
-        'onResetFailure',
         'onReset',
         'componentWillMount',
         'componentWillUnmount',
@@ -36,13 +34,6 @@ describe('(Container) ResetPasswordContainer', () => {
     });
 
     /* eslint-disable react/destructuring-assignment */
-
-    it('#onResetFailure Should direct user to recover password page', () => {
-      props.onResetFailure();
-
-      expect(push).to.have.been.calledOnceWithExactly(config.route.auth.passwordRecovery);
-    });
-
     it('#onReset Should dispatch `resetPassword` action with data', () => {
       const data = { token, data: 'john@doe.com' };
       props.onReset(token, 'john@doe.com');

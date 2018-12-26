@@ -2,7 +2,6 @@
 import React from 'react';
 import { Trans } from '@lingui/react';
 import { Panel } from 'react-bootstrap';
-import { popoverOnSuccess, popoverOnFailure } from 'util/Form';
 import { Button } from 'components/Elements';
 import { Request } from 'questrar';
 import { emailActivationRequest } from 'bundles/Auth/modules/ActivateAccountModule';
@@ -17,7 +16,7 @@ type Props = {
 }
 
 export const ActivateAccountComponent = ({
-  email, onSend, onActivationSent,
+  email, onSend,
 }: Props) => (
   <Panel className="activate-account">
     <Panel.Heading>
@@ -47,14 +46,6 @@ export const ActivateAccountComponent = ({
       <Request
         id={emailActivationRequest.id}
         inject={requestButtonProps()}
-        onSuccess={popoverOnSuccess({
-          title: (
-            <Trans>
-              Activation Email Sent
-            </Trans>
-          ),
-          onClick: onActivationSent,
-        })}
       >
         <Button bsStyle="primary" type="button" onClick={() => onSend(email)} block>
           <Trans>
